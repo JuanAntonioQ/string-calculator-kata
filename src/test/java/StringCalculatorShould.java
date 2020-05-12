@@ -1,3 +1,4 @@
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -39,6 +40,35 @@ public class StringCalculatorShould {
         StringCalculator stringCalculator = new StringCalculator();
         assertThat(stringCalculator.add("1,2")).isEqualTo("3.0");
         assertThat(stringCalculator.add("1.1,2.2")).isEqualTo("3.3");
+    }
+
+    @Test(expected = InvalidNumberException.class)
+    public void throw_exception_when_there_is_no_number_in_the_last_position(){
+        StringCalculator stringCalculator = new StringCalculator();
+        stringCalculator.add("1,3,");
+    }
+
+    @Test
+    public void return_sum_of_numbers_that_are_separated_by_custom_separators(){
+        StringCalculator stringCalculator = new StringCalculator();
+        assertThat(stringCalculator.add("//;\n1;2")).isEqualTo("3.0");
+        assertThat(stringCalculator.add("//\\|\n1|2")).isEqualTo("3.0");
+        assertThat(stringCalculator.add("//sep\n2sep3")).isEqualTo("5.0");
+    }
+
+    @Test
+    public void return_sum_of_numbers_that_are_separated_by_newline(){
+        StringCalculator stringCalculator = new StringCalculator();
+        assertThat(stringCalculator.add("1\n1")).isEqualTo("2.0");
+        assertThat(stringCalculator.add("2\n3")).isEqualTo("5.0");
+        assertThat(stringCalculator.add("2\n3,2\n2")).isEqualTo("9.0");
+    }
+
+    @Test(expected = NegativeNumbersNotAllowedException.class)
+    public void throw_exception_when_there_are_negative_numbers(){
+        StringCalculator stringCalculator = new StringCalculator();
+        stringCalculator.add("1,-2,-5");
+        stringCalculator.add("//,\n2,-4,-5");
     }
 
 
